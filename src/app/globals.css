@@ -2,32 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+/* 1. Background (0dp elevation surface overlay)
+2. Surface (with 1dp elevation surface overlay)
+3. Primary
+4. Secondary
+5. On background
+6. On Surface
+7. On Primary
+8. On Secondary */
+
+.background {
+    background-color:#121212;
+    color: #FFFFFF;
+}
+
+
+.surface {
+    background-color: #1C1C1C;
+    color: #FFFFFF;
+}
+
+.surface-2 {
+    background-color: #2A2A2A;
+    color: #FFFFFF;
+}
+
+.surface-2-h:hover     {
+    background-color: #2C2C2C;
+    color: #FFFFFF;
+}
+.surface-2-h:checked     {
+    background-color: #2C2C2C;
+    color: #FFFFFF; 
+}
+
+
+.primary {
+    border: #BB86FC 2px solid;
+    background-color: #BB86FC;
+    color: #000000;
+}
+
+.primary:hover {
+    border: #BB86FC 2px solid;
+    background-color: #00000000;
+    color: #BB86FC;
+}
+
+
+.secondary {
+    border: #03DAC5 2px solid;
+    background-color: #03DAC5;
+    color: #000000;
+}
+
+.secondary:hover {
+    border: #03DAC5 2px solid;
+    background-color: #00000000;
+    color: #03DAC0;
+}
+
+
+.error {
+    border: #CF6679 2px solid;
+    background-color: #CF6679;
+    color: #000000;
+}
+
+.body {
+    color-scheme: dark;
+    background-color: #121212;
+    color: #FFFFFF;;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    :root {
+        color-scheme: dark;
+        
+        --brand:
+    }
 }

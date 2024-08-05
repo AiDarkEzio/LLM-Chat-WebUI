@@ -1,0 +1,155 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String
+  username      String?         @unique
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  role          UserRole        @default(USER)
+  // Session       Session[]
+  // Account       Account?
+  Messages      Message[]
+  Conversation  Conversation[]
+  // Authenticator Authenticator[]
+}
+
+model Assistant {
+  id               String           @id @default(cuid())
+  name             String           @unique()
+  createdAt        DateTime         @default(now())
+  modified_at      DateTime         @updatedAt
+  // size             Int
+  // digest           String
+  // detailsId        String           @unique
+  Message          Message[]
+  // AssistantDetails AssistantDetails @relation(fields: [detailsId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Message {
+  id             String      @id @default(cuid())
+  text           String
+  image          String?
+  role           MessageRole @default(ASSISTANT)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  userId         String?
+  assistantId    String?
+  senderId       String
+  conversationId String
+
+  User         User?        @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Assistant    Assistant?   @relation(fields: [assistantId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Conversation Conversation @relation(fields: [conversationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+// model AssistantDetails {
+//   id                 String @id @default(cuid())
+//   parent_model       String
+//   format             String
+//   family             String
+//   parameter_size     String
+//   quantization_level String
+//   families           String
+
+//   Assistant Assistant?
+// }
+
+model Conversation {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+  userId    String
+
+  User User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum MessageRole {
+  ASSISTANT
+  USER
+  SYSTEM
+}
+
+// model Account {
+//   id                       String  @id @default(cuid())
+//   userId                   String  @unique
+//   type                     String
+//   provider                 String
+//   providerAccountId        String
+//   refresh_token            String? @db.Text
+//   access_token             String? @db.Text
+//   expires_at               Int?
+//   token_type               String?
+//   scope                    String?
+//   id_token                 String? @db.Text
+//   session_state            String?
+//   refresh_token_expires_in Int?
+//   user                     User?   @relation(fields: [userId], references: [id])
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@unique([provider, providerAccountId])
+//   @@index([userId])
+// }
+
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   userId       String
+//   expires      DateTime
+//   user         User     @relation(fields: [userId], references: [id])
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([userId])
+// }
+
+// model VerificationToken {
+//   identifier String
+//   token      String
+//   expires    DateTime
+
+//   @@unique([identifier, token])
+// }
+
+// Optional for WebAuthn support
+// model Authenticator {
+//   credentialID         String  @unique
+//   userId               String
+//   providerAccountId    String
+//   credentialPublicKey  String
+//   counter              Int
+//   credentialDeviceType String
+//   credentialBackedUp   Boolean
+//   transports           String?
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@id([userId, credentialID])
+// }
